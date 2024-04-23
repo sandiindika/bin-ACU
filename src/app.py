@@ -142,7 +142,7 @@ class MyApp():
         dipanggil disini.
         """
         with st.container():
-            selected = self._navigation() # sidebar navigation
+            selected = self._navigation()
 
             if selected == self.menu_[0]:
                 self._pageBeranda()
