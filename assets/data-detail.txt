@@ -1,0 +1,1 @@
+Data yang digunakan adalah sekunder yang diperoleh dari Klinik Utama Sukma Wijaya Kabupaten Sampang. Data tersebut merupakan hasil rekam medis tahun 2018-2020 dengan jumlah data sebanyak 440 data. Kategori penyakit yang teridentifikasi dalam data berjumlah 7 dengan 43 jenis gejala.

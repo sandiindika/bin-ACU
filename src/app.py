@@ -22,7 +22,7 @@ st.markdown(
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
         footer {visibility: hidden;}
-        .st-emotion-cache-z5fcl4 {padding-top: 1rem; padding-bottom: 1rem;}
+        .st-emotion-cache-z5fcl4 {padding-top: 1rem;}
     </style>""",
     unsafe_allow_html= True
 )
@@ -62,10 +62,10 @@ class MyApp():
         self.message = message
         self.pathdata = "./data/dataframe"
         self.menu_ = [
-            "Beranda", "Dataset"
+            "Beranda", "Data Penelitian"
         ]
         self.icons_ = [
-            "house", "house"
+            "house", "database"
         ]
 
     def _navigation(self):
@@ -119,8 +119,8 @@ class MyApp():
         try:
             ms_20()
             show_text(
-                "Integrasi Sistem Pakar Rule-Based untuk Diagnosis Penyakit pada \
-                Ibu Hamil",
+                "Integrasi Sistem Pakar Rule-Based untuk Diagnosis Penyakit \
+                pada Ibu Hamil", size= 2
             )
             show_caption(
                 "Studi Kasus: Klinik Utama Sukma Wijaya Kabupaten Sampang",
@@ -135,6 +135,47 @@ class MyApp():
         except Exception as e:
             self._exceptionMessage(e)
 
+    def _pageDataset(self):
+        """Tab dataset
+        
+        Halaman ini akan menampilkan data penelitian.
+        """
+        try:
+            ms_20()
+            show_text("Data Penelitian", division= True)
+
+            df = get_csv("./data/dataframe/data.csv")
+            detail_data = df.iloc[:, :3]
+            label_data = df.iloc[:, -1]
+            sample_data = pd.concat([detail_data, label_data], axis= 1)
+            with st.expander("Dataset"):
+                st.dataframe(
+                    sample_data,
+                    use_container_width= True, hide_index= True
+                )
+
+            ms_20()
+            show_caption("Detail Data:")
+
+            with open("./assets/data-detail.txt", "r") as file:
+                detail = file.read()
+            show_paragraf(detail)
+
+            ms_20()
+            left, right = ml_split()
+            with left:
+                show_caption("Daftar Gejala:")
+                gejala_data = df.iloc[:, 3:-1].columns
+                for no, gejala in enumerate(gejala_data):
+                    st.write(f"{no + 1}. {gejala}")
+            with right:
+                show_caption("Jenis Penyakit:")
+                penyakit_data = label_data.unique()
+                for no, penyakit in enumerate(penyakit_data):
+                    st.write(f"{no + 1}. {penyakit}")
+        except Exception as e:
+            self._exceptionMessage(e)
+
     def main(self):
         """Main program
         
@@ -146,6 +187,8 @@ class MyApp():
 
             if selected == self.menu_[0]:
                 self._pageBeranda()
+            elif selected == self.menu_[1]:
+                self._pageDataset()
 
 if __name__ == "__main__":
     app = MyApp(message= True)
