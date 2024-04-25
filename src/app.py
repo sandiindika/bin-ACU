@@ -1,8 +1,8 @@
 # LIBRARY / MODULE / PUSTAKA
 
 import streamlit as st
-from streamlit_option_menu import option_menu
 from streamlit import session_state as ss
+from streamlit_option_menu import option_menu
 
 from functions import *
 from warnings import simplefilter
