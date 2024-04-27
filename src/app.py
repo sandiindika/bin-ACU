@@ -62,10 +62,10 @@ class MyApp():
         self.message = message
         self.pathdata = "./data/dataframe"
         self.menu_ = [
-            "Beranda", "Data Penelitian"
+            "Beranda", "Data Penelitian", "Klasifikasi"
         ]
         self.icons_ = [
-            "house", "database"
+            "house", "database", "clipboard-data"
         ]
 
     def _navigation(self):
@@ -142,7 +142,7 @@ class MyApp():
         """
         try:
             ms_20()
-            show_text("Data Penelitian", division= True)
+            show_text("*Data Penelitian*", division= True)
 
             df = get_csv("./data/dataframe/data.csv")
             detail_data = df.iloc[:, :3]
@@ -176,6 +176,26 @@ class MyApp():
         except Exception as e:
             self._exceptionMessage(e)
 
+    def _pageKlasifikasi(self):
+        """Tab klasiifkasi
+        
+        Halaman ini digunakan untuk set-up dan menghasilkan model klasifikasi.
+        """
+        try:
+            ms_20()
+            show_text("*Klasifikasi*", division= True)
+
+            df = get_csv("./data/dataframe/data.csv")
+            
+            left, right = ml_right()
+            with left:
+                tr_ratio = st.number_input(
+                    "Persentase data train (%)", min_value= 10, max_value= 90,
+                    step= 10, key= "Number input untuk size ratio data train"
+                )
+        except Exception as e:
+            self._exceptionMessage(e)
+
     def main(self):
         """Main program
         
@@ -189,6 +209,8 @@ class MyApp():
                 self._pageBeranda()
             elif selected == self.menu_[1]:
                 self._pageDataset()
+            elif selected == self.menu_[2]:
+                self._pageKlasifikasi()
 
 if __name__ == "__main__":
     app = MyApp(message= True)
