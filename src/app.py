@@ -94,7 +94,7 @@ class MyApp():
             )
 
             ms_60()
-            show_caption("Copyright © 2024 | Ach. Choirul Umam", size= 5)
+            show_caption("Copyright © 2024 | ~", size= 5)
         return selected
     
     def _exceptionMessage(self, e):
@@ -189,10 +189,66 @@ class MyApp():
             
             left, right = ml_right()
             with left:
-                tr_ratio = st.number_input(
-                    "Persentase data train (%)", min_value= 10, max_value= 90,
-                    step= 10, key= "Number input untuk size ratio data train"
+                tr_size = st.text_input(
+                    "Ukuran train (float | int, default= None)", value= None,
+                    key= "Number input untuk ukuran data train"
                 )
+
+                try:
+                    if tr_size == None or tr_size == "":
+                        tr_size = None
+                    elif tr_size.isdigit():
+                        tr_size = int(tr_size)
+                    else:
+                        tr_size = float(tr_size)
+                except ValueError:
+                    st.error("Value tidak cocok")
+
+                ts_size = st.text_input(
+                    "Ukuran test (float | int, default= None)",
+                    key= "Number input untuk ukuran data test"
+                )
+
+                try:
+                    if ts_size == None or ts_size == "":
+                        ts_size = None
+                    elif ts_size.isdigit():
+                        ts_size = int(ts_size)
+                    else:
+                        ts_size = float(ts_size)
+                except ValueError:
+                    st.error("Value tidak cocok")
+
+                random_state = st.number_input(
+                    "Nilai Random State", min_value= 1, step= 1,
+                    key= "Number input untuk masukan nilai random state"
+                )
+
+                shuffle = st.radio(
+                    "Acak data?", options= [True, False], horizontal= True,
+                    key= "Radio button untuk mengacak data atau tidak"
+                )
+
+                ms_40()
+                btn_train = st.button(
+                    "Submit", use_container_width= True,
+                    key= "Button untuk training model"
+                )
+
+            with right:
+                if btn_train:
+                    features = df.iloc[:, 3:46]
+                    labels = df.iloc[:, -1]
+
+                    features.replace({"Ya": 1, "Tidak": 0}, inplace= True)
+
+                    model = train_model(
+                        features, labels, test_size= ts_size,
+                        train_size= tr_size, random_state= random_state,
+                        shuffle= shuffle
+                    )
+
+                    st.success("Train model success...")
         except Exception as e:
             self._exceptionMessage(e)
 

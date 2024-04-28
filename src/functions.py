@@ -7,6 +7,9 @@ import os
 import pandas as pd
 import numpy as np
 
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import CategoricalNB
+
 from warnings import simplefilter
 
 simplefilter(action= "ignore", category= FutureWarning)
@@ -107,7 +110,9 @@ def show_caption(text, size= 3, division= False):
         st.markdown("---")
 
 def show_paragraf(text):
-    st.markdown(f"<div class= \"paragraph\">{text}</div>", unsafe_allow_html= True)
+    st.markdown(
+        f"<div class= \"paragraph\">{text}</div>", unsafe_allow_html= True
+    )
 
 """Load file
 
@@ -147,3 +152,60 @@ def mk_dir(dirpath):
         os.makedirs(dirpath)
 
 # CUSTOM FUNCTIONS
+        
+def train_model(
+        X, y, test_size= None, train_size= None, random_state= None,
+        shuffle: bool= True
+    ):
+    """Train Model
+
+    Fungsi ini akan melatih model categorical naive bayes.
+
+    Parameters
+    ----------
+    X : {array-like, sparse matrix} of shape (n_samples, n_features)
+        Vektor pelatihan di mana n_samples adalah jumlah sampel dan n_features
+        adalah jumlah fitur. Di sini, setiap fitur X diasumsikan berasal dari
+        distribusi kategori yang berbeda. Diasumsikan lebih lanjut bahwa semua
+        kategori dari setiap fitur diawali oleh angka 0, ..., n-1, dimana n
+        mengacu pada jumlah total kategori untuk fitur yang diberikan.
+
+    y : array-like of shape (n_samples)
+        Nilai target/label.
+
+    test_size : float or int, default= None
+        Jika float, harus antara 0,0 dan 1,0 dan merepresentasikan proporsi
+        dari dataset yang akan disertakan dalam pemisahan test. Jika int,
+        representasi nilai absolut dari sampel test. Jika None, nilainya
+        ditetapkan sebagai pelengkap ukuran train. Jika train_size juga
+        None, maka akan di set ke 0,25.
+
+    train_size : float or int, default= None
+        Jika float, harus antara 0,0 dan 1,0 dan merepresentasikan proporsi
+        dari dataset yang akan disertakan dalam pemisahan train. Jika int,
+        representasi nilai absolut dari sampel train. Jika None, nilainya
+        secara otomatis diatur ke pelengkap ukuran test.
+    
+    random_state : int, RandomState instance or None, default= None
+        Mengontrol pengacakan yang diterapkan pada data sebelum menerapkan
+        pemisahan. Berikan nilai int untuk keluaran yang dapat
+        direproduksi di beberapa panggilan fungsi.
+
+    shuffle : bool, default= True
+        Jika True, data akan di acak sebelum pemisahan. Jika False, maka
+        sebaliknya.
+
+    Returns
+    -------
+    model : object
+        Mengembalikan model yang telah di latih.
+    """
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size= test_size, train_size= train_size,
+        random_state= random_state, shuffle= shuffle
+    )
+
+    model = CategoricalNB()
+    model.fit(X_train, y_train)
+
+    return model
