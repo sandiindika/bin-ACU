@@ -242,13 +242,22 @@ class MyApp():
 
                     features.replace({"Ya": 1, "Tidak": 0}, inplace= True)
 
-                    model = train_model(
+                    model, X_test, y_test = train_model(
                         features, labels, test_size= ts_size,
                         train_size= tr_size, random_state= random_state,
                         shuffle= shuffle
                     )
 
+                    y_pred = model.predict(X_test)
+
+                    ms_20()
                     st.success("Train model success...")
+                    st.info(f"Score model: {score_model(y_test, y_pred) * \
+                        100:.2f}%")
+                    show_caption("Classification Report", size= 4)
+                    st.expander("Lebih lanjut...").dataframe(
+                        clf_report(y_test, y_pred), use_container_width= True
+                    )
         except Exception as e:
             self._exceptionMessage(e)
 

@@ -9,6 +9,7 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import CategoricalNB
+from sklearn.metrics import accuracy_score, classification_report
 
 from warnings import simplefilter
 
@@ -199,6 +200,12 @@ def train_model(
     -------
     model : object
         Mengembalikan model yang telah di latih.
+
+    X_test : {array-like, sparse matrix} of shape (n_samples, n_features)
+        Vektor fitur data test hasil dari pemisahan data.
+
+    y_test : array-like of shape (n_samples)
+        Nilai target/label dari data test.
     """
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size= test_size, train_size= train_size,
@@ -208,4 +215,28 @@ def train_model(
     model = CategoricalNB()
     model.fit(X_train, y_train)
 
-    return model
+    return model, X_test, y_test
+
+def score_model(y_true, y_pred):
+    """Menghitung skor model
+
+    Parameters
+    ----------
+    y_test : array-like of shape (n_samples)
+        Nilai target/label dari data aktual.
+
+    y_pred : array-like of shape (n_samples)
+        Nilai target/label hasil prediksi.
+
+    Returns
+    -------
+    self : float
+        Nilai skor model yang dihitung menggunakan accuracy_score()
+    """
+    return accuracy_score(y_true= y_true, y_pred= y_pred)
+
+def clf_report(y_true, y_pred):
+    """
+    """
+    cr = classification_report(y_true, y_pred, output_dict= True)
+    return pd.DataFrame(cr).transpose()
